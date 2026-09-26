@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS t_transcode_profile (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='转码档位配置';
 
 -- 3) 转码任务（一个素材按一个档位转一次）
+-- 已建过表的库补列：ALTER TABLE t_transcode_job ADD COLUMN cancel_reason VARCHAR(255) DEFAULT NULL COMMENT '撤销原因（撤销时必填）' AFTER error_msg;
 CREATE TABLE IF NOT EXISTS t_transcode_job (
     id            BIGINT      NOT NULL PRIMARY KEY COMMENT '雪花 ID，应用层分配',
     job_no        VARCHAR(32) NOT NULL COMMENT '任务编号，全局唯一（如 TJ-2026-0001）',
@@ -62,6 +63,7 @@ CREATE TABLE IF NOT EXISTS t_transcode_job (
     progress      INT         NOT NULL DEFAULT 0 COMMENT '进度 0-100',
     output_path   VARCHAR(255) DEFAULT NULL COMMENT '产出文件路径',
     error_msg     VARCHAR(255) DEFAULT NULL COMMENT '最近一次失败原因',
+    cancel_reason VARCHAR(255) DEFAULT NULL COMMENT '撤销原因（撤销时必填）',
     submitted_at  DATETIME    DEFAULT NULL COMMENT '提交时刻',
     started_at    DATETIME    DEFAULT NULL COMMENT '开始处理时刻',
     finished_at   DATETIME    DEFAULT NULL COMMENT '结束时刻',
